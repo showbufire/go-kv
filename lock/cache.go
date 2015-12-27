@@ -8,7 +8,7 @@ import (
 
 type entry struct {
 	result int
-	ready  chan int
+	ready  chan struct{}
 }
 
 type memo struct {
@@ -27,7 +27,7 @@ func (m *memo) Get(k int) int {
 	m.mtx.Lock()
 	v, ok := m.cached[k]
 	if !ok {
-		ready := make(chan int)
+		ready := make(chan struct{})
 		v = &entry{result: -1, ready: ready}
 		m.cached[k] = v
 		m.mtx.Unlock()
